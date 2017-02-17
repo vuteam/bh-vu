@@ -1,4 +1,4 @@
-#ifndef __picload_h__
+##ifndef __picload_h__
 #define __picload_h__
 
 #include <lib/gdi/gpixmap.h>
