@@ -112,4 +112,4 @@ public:
 //for old plugins
 SWIG_VOID(int) loadPic(ePtr<gPixmap> &SWIG_OUTPUT, std::string filename, int x, int y, int aspect, int resize_mode=0, int rotate=0, int background=0, std::string cachefile="");
 
-#endif // __picload_h__
+ #endif // __picload_h__
