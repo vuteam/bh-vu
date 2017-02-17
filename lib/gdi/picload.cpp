@@ -466,11 +466,10 @@ inline void m_rend_gif_decodecolormap(unsigned char *cmb, unsigned char *rgbb, C
 	}
 }
 
-static void gif_load(Cfilepara* filepara)
+static void gif_load(Cfilepara* filepara, bool forceRGB = false)
 {
 	unsigned char *pic_buffer = NULL;
 	int px, py, i, j;
-	unsigned char *fbptr;
 	unsigned char *slb=NULL;
 	GifFileType *gft;
 	GifRecordType rt;
@@ -478,15 +477,9 @@ static void gif_load(Cfilepara* filepara)
 	ColorMapObject *cmap;
 	int cmaps;
 	int extcode;
+	int ErrorCode;
 
-#if !defined(GIFLIB_MAJOR) || ( GIFLIB_MAJOR < 5)
-	gft = DGifOpenFileName(filepara->file);
-#else
-	{
-		int err;
-		gft = DGifOpenFileName(filepara->file, &err);
-	}
-#endif
+	gft = DGifOpenFileName(filepara->file, &ErrorCode);
 	if (gft == NULL)
 		return;
 	do
@@ -519,10 +512,9 @@ static void gif_load(Cfilepara* filepara)
 						filepara->palette[i].b = cmap->Colors[i].Blue;
 					}
 
-					fbptr = pic_buffer;
 					if (!(gft->Image.Interlace))
 					{
-						for (i = 0; i < py; i++, fbptr += px * 3)
+						for (i = 0; i < py; i++)
 						{
 							if (DGifGetLine(gft, slb, px) == GIF_ERROR)
 								goto ERROR_R;
@@ -531,15 +523,35 @@ static void gif_load(Cfilepara* filepara)
 					}
 					else
 					{
+						int IOffset[] = { 0, 4, 2, 1 }; // The way Interlaced image should.
+						int IJumps[] = { 8, 8, 4, 2 };  // be read - offsets and jumps...
 						for (j = 0; j < 4; j++)
 						{
-							slb = pic_buffer;
-							for (i = 0; i < py; i++)
+							for (i = IOffset[j]; i < py; i += IJumps[j])
 							{
-								if (DGifGetLine(gft, slb, px) == GIF_ERROR)
+								if (DGifGetLine(gft, pic_buffer + i*px, px) == GIF_ERROR)
 									goto ERROR_R;
-								slb += px;
 							}
+						}
+					}
+					if (forceRGB) {
+						unsigned char *pic_buffer2 = new unsigned char[px * py * 3];
+						if (pic_buffer2 != NULL) {
+							unsigned char *slb2 = pic_buffer2;
+							slb = pic_buffer;
+							for (j = 0; j < py; j++) {
+								for (i = 0; i < px; i++) {
+									int c = *slb++;
+									*slb2++ = filepara->palette[c].r;
+									*slb2++ = filepara->palette[c].g;
+									*slb2++ = filepara->palette[c].b;
+								}
+							}
+							filepara->bits = 24;
+							filepara->pic_buffer = pic_buffer2;
+							delete [] pic_buffer;
+							delete filepara->palette;
+							filepara->palette = NULL;
 						}
 					}
 				}
@@ -557,26 +569,11 @@ static void gif_load(Cfilepara* filepara)
 	}
 	while (rt != TERMINATE_RECORD_TYPE);
 
-#if !defined(GIFLIB_MAJOR) || ( GIFLIB_MAJOR < 5) || (GIFLIB_MAJOR == 5 && GIFLIB_MINOR == 0)
-	DGifCloseFile(gft);
-#else
-	{
-		int err;
-		DGifCloseFile(gft, &err);
-	}
-#endif
+	DGifCloseFile(gft, &ErrorCode);
 	return;
 ERROR_R:
-	eDebug("[Picload] <Error gif>");
-#if !defined(GIFLIB_MAJOR) || ( GIFLIB_MAJOR < 5) || (GIFLIB_MAJOR == 5 && GIFLIB_MINOR == 0)
-	DGifCloseFile(gft);
-#else
-	{
-		int err;
-		DGifCloseFile(gft, &err);
-	}
-#endif
-}
+	eDebug("[ePicLoad] <Error gif>");
+DGifCloseFile(gft, &ErrorCode);
 
 //---------------------------------------------------------------------------------------------
 
