@@ -466,7 +466,7 @@ inline void m_rend_gif_decodecolormap(unsigned char *cmb, unsigned char *rgbb, C
 	}
 }
 
-static void gif_load(Cfilepara* filepara, bool forceRGB = false)
+sstatic void gif_load(Cfilepara* filepara, bool forceRGB = false)
 {
 	unsigned char *pic_buffer = NULL;
 	int px, py, i, j;
@@ -477,9 +477,8 @@ static void gif_load(Cfilepara* filepara, bool forceRGB = false)
 	ColorMapObject *cmap;
 	int cmaps;
 	int extcode;
-	int ErrorCode;
 
-	gft = DGifOpenFileName(filepara->file, &ErrorCode);
+	gft = DGifOpenFileName(filepara->file);
 	if (gft == NULL)
 		return;
 	do
@@ -569,11 +568,12 @@ static void gif_load(Cfilepara* filepara, bool forceRGB = false)
 	}
 	while (rt != TERMINATE_RECORD_TYPE);
 
-	DGifCloseFile(gft, &ErrorCode);
+	DGifCloseFile(gft);
 	return;
 ERROR_R:
 	eDebug("[ePicLoad] <Error gif>");
-DGifCloseFile(gft, &ErrorCode);
+	DGifCloseFile(gft);
+}
 
 //---------------------------------------------------------------------------------------------
 
