@@ -4,8 +4,7 @@ dist_pkgdata_DATA = \
 	encoding.conf \
 	keymap.xml \
 	menu.xml \
-	radio.mvi \
-	black.mvi \
+        black.mvi \
 	rcpositions.xml \
 	setup.xml \
 	skin_subtitles.xml \
