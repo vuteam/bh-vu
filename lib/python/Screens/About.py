@@ -35,7 +35,7 @@ class About(Screen):
             driverdate = self.getDriverInstalledDate_proxy()
         self['DriverVersion'] = StaticText(_('DVB drivers: ') + driverdate)
         self['KernelVersion'] = StaticText(_('Kernel version: ') + self.getKernelVersionString())
-        self['FPVersion'] = StaticText('Support: REDOUANE rakzami39@hotmail.com')
+        self['FPVersion'] = StaticText('Support: REDOUANE rakzami39@gmail.com')
         self['CpuInfo'] = StaticText(_('CPU: ') + self.getCPUInfoString())
         AboutText = _('Hardware: ') + about.getHardwareTypeString() + '\n'
         AboutText += _('CPU: ') + about.getCPUInfoString() + '\n'
