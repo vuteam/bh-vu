@@ -44,15 +44,17 @@ class PluginDescriptor:
 	# fnc must take an interface name as parameter and return None if the plugin supports an extended setup
 	# or return a function which is called with session and the interface name for extended setup of this interface
 	WHERE_NETWORKSETUP = 10
+	
+	WHERE_NETWORKMOUNTS = 11
 
 	# show up this plugin (or a choicebox with all of them) for long INFO keypress
 	# or return a function which is called with session and the interface name for extended setup of this interface
-	WHERE_EVENTINFO = 11
+	WHERE_EVENTINFO = 12
 
 	# reason (True: Networkconfig read finished, False: Networkconfig reload initiated )
-	WHERE_NETWORKCONFIG_READ = 12
+	WHERE_NETWORKCONFIG_READ = 13
 
-	WHERE_AUDIOMENU = 13
+	WHERE_AUDIOMENU = 14
 
 	# fnc 'SoftwareSupported' or  'AdvancedSoftwareSupported' must take a parameter and return None
 	# if the plugin should not be displayed inside Softwaremanger or return a function which is called with session
