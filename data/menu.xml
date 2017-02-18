@@ -73,7 +73,7 @@
 				<item weight="11" level="2" text="Mgcamd Info" entryID="mgcamdinfo"><screen module="MgcamdInfo" screen="MgcamdInfo" /></item>
 			</menu>
 			<item weight="15" level="0" text="Parental control" entryID="parental_setup"><screen module="ParentalControlSetup" screen="ParentalControlSetup"/></item>
-			<item weight="15" level="0" text="Ipk uninstall" entryID="Ipk_uninstall"><screen module="Ipkuninstall" screen="Ipkuninstall" /></item>
+			<!--<item weight="15" level="0" text="Ipk uninstall" entryID="Ipk_uninstall"><screen module="Ipkuninstall" screen="Ipkuninstall" /></item>-->
 			<item weight="15" level="0" text="Factory reset" entryID="factory_reset">
 				<code>
 from Screens.FactoryReset import FactoryReset
