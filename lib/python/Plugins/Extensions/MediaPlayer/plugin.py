@@ -1153,15 +1153,11 @@ class MediaPlayerLCDScreen(Screen):
 		elif line == 4:
 			self["text4"].setText(text)
 
-def mainCheckTimeshiftCallback(session, answer):
-	if answer:
-		session.open(MediaPlayer)
-
 def main(session, **kwargs):
-	InfoBar.instance.checkTimeshiftRunning(boundFunction(mainCheckTimeshiftCallback, session))
+	session.open(MediaPlayer)
 
 def menu(menuid, **kwargs):
-	if menuid == "mainmenu" and config.mediaplayer.onMainMenu.getValue():
+	if menuid == "mainmenu":
 		return [(_("Media player"), main, "media_player", 45)]
 	return []
 
@@ -1294,8 +1290,6 @@ def filescan(**kwargs):
 from Plugins.Plugin import PluginDescriptor
 def Plugins(**kwargs):
 	return [
-		PluginDescriptor(name = _("Media player"), description = _("Play back media files"), where = PluginDescriptor.WHERE_PLUGINMENU, icon="MediaPlayer.png", needsRestart = False, fnc = main),
-		PluginDescriptor(name = _("Media player"), where = PluginDescriptor.WHERE_FILESCAN, needsRestart = False, fnc = filescan),
-		PluginDescriptor(name = _("Media player"), where = PluginDescriptor.WHERE_MENU, needsRestart = False, fnc = audiocdscan),
-		PluginDescriptor(name = _("Media player"), description = _("Play back media files"), where = PluginDescriptor.WHERE_MENU, needsRestart = False, fnc = menu)
+		PluginDescriptor(name = "MediaPlayer", description = "Play back media files", where = PluginDescriptor.WHERE_MENU, needsRestart = False, fnc = menu),
+		PluginDescriptor(name = "MediaPlayer", where = PluginDescriptor.WHERE_FILESCAN, needsRestart = False, fnc = filescan)
 	]
